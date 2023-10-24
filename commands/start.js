@@ -12,9 +12,12 @@ async function get() {
     mimetype: "image/jpeg",
     data: Buffer.from(
       (
-        await axios.get("https://graph.org/file/ecbc27f276890bf2f65a2.jpg", {
-          responseType: "arraybuffer",
-        })
+        await axios.get(
+          "https://raw.githubusercontent.com/The3ven/WhatsBot/main/start.jpg",
+          {
+            responseType: "arraybuffer",
+          }
+        )
       ).data
     ).toString("base64"),
     filename: "start.jpg",

@@ -35,7 +35,7 @@
       "value": ""
     },
     "SERVER_MODE": {
-      "description": "If true, then server will not run on local host",
+      "description": "If true, then server will run on local host",
       "value": "false"
     }
   }
