@@ -7,7 +7,7 @@ async function main() {
     await replicate();
     setTimeout(() => {
       require("./main");
-    }, 2000);
+    }, 1000);
   } catch (error) {
     console.error(error?.message);
   }

@@ -11,4 +11,5 @@ module.exports = {
   default_tr_lang: process.env.DEFAULT_TR_LANG || "en",
   enable_delete_alert: process.env.ENABLE_DELETE_ALERT || "true",
   ocr_space_api_key: process.env.OCR_SPACE_API_KEY || "",
+  server_mode: process.env.SERVER_MODE || "false",
 };

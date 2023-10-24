@@ -12,6 +12,8 @@ const client = new Client({
 });
 
 let password = null;
+let app_url = "localhost";
+let port = 8080;
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -41,9 +43,9 @@ client.on("ready", () => {
   setTimeout(async () => {
     console.log("Session has been created");
     await write(password);
-    app.listen(8080, () => {
+    app.listen(port, () => {
       console.log(
-        "Go to http://{app_url}/session.secure to download the session"
+        `Go to http://${app_url}":"${port}/session.secure to download the session`
       );
     });
   }, 3000);

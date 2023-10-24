@@ -56,7 +56,7 @@ const afkStatus = async (client, chatid) => {
       chatid,
       `You've marked yourself offline at ${formatTime(data.time)}.\nReason: ${
         data.reason
-      }\n\nIf you want to set yourself back online, use *!afk aff*`
+      }\n\nIf you want to set yourself back online, use *!afk off*`
     );
   } else {
     await client.sendMessage(chatid, `You're online.`);
@@ -91,6 +91,6 @@ module.exports = {
   command: "!afk",
   commandType: "admin",
   isDependent: false,
-  help: "*Afk*\n\n1. *!afk on Message* to turn on afk.\n2. *!afk off* to turn off afk.\n3. *!afk status* to check current status of afk.",
+  help: "*Afk*\n\n1. *!afk on* Message to turn on afk.\n2. *!afk off* to turn off afk.\n3. *!afk status* to check current status of afk.",
   execute,
 };

@@ -1,9 +1,11 @@
 //jshint esversion:11
-const express = require("express");
-const app = express();
 const { Client, LocalAuth } = require("whatsapp-web.js");
 const pmpermit = require("./helpers/pmpermit");
 const config = require("./config");
+if (config.server_mode == "true") {
+  var express = require("express");
+  var app = express();
+}
 const fs = require("fs");
 const logger = require("./logger");
 const { afkHandler } = require("./helpers/afkWrapper");
@@ -147,18 +149,20 @@ client.on("disconnected", (reason) => {
   console.log("Client was logged out", reason);
 });
 
-app.get("/", (req, res) => {
-  res.send(
-    '<h1>This server is powered by Whatsbot<br><a href="https://github.com/tuhinpal/WhatsBot">https://github.com/tuhinpal/WhatsBot</a></h1>'
-  );
-});
+if (config.server_mode == "true") {
+  app.get("/", (req, res) => {
+    res.send(
+      '<h1>This server is powered by Whatsbot<br><a href="https://github.com/tuhinpal/WhatsBot">https://github.com/tuhinpal/WhatsBot</a></h1>'
+    );
+  });
 
-app.use(
-  "/public",
-  express.static("public"),
-  require("serve-index")("public", { icons: true })
-); // public directory will be publicly available
+  app.use(
+    "/public",
+    express.static("public"),
+    require("serve-index")("public", { icons: true })
+  ); // public directory will be publicly available
 
-app.listen(process.env.PORT || 8080, () => {
-  console.log(`Server listening at Port: ${process.env.PORT || 8080}`);
-});
+  app.listen(process.env.PORT || 8080, () => {
+    console.log(`Server listening at Port: ${process.env.PORT || 8080}`);
+  });
+}

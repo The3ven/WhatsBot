@@ -33,6 +33,10 @@
     "OCR_SPACE_API_KEY": {
       "description": "Get it from https://ocr.space/OCRAPI",
       "value": ""
+    },
+    "SERVER_MODE": {
+      "description": "If true, then server will not run on local host",
+      "value": "false"
     }
   }
 }

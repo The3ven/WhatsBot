@@ -22,5 +22,6 @@ session.txt
 session-output/*
 session-output
 session.secure
+.wwebjs_cache/*
 utilities/
 .vscode/
