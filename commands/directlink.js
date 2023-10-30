@@ -21,7 +21,11 @@ async function telegraph(attachmentData) {
       return "error";
     });
 }
-const execute = async (client, msg) => {
+const execute = async (client, msg, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   msg.delete(true);
   if (msg.hasQuotedMsg) {
     let quotedMsg = await msg.getQuotedMessage();
@@ -33,7 +37,7 @@ const execute = async (client, msg) => {
       quotedMsg.reply(`🔗 *Direct Link 👇*\n\n` + "```" + data + "```");
     }
   } else {
-    await client.sendMessage(msg.to, "Please reply to a media file");
+    await client.sendMessage(msgMode, "Please reply to a media file");
   }
 };
 

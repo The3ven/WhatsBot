@@ -40,7 +40,11 @@ async function emailVerifier(email) {
   }
 }
 
-const execute = async (client, msg, args) => {
+const execute = async (client, msg, args, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   msg.delete(true);
   let getdata;
   if (msg.hasQuotedMsg) {
@@ -49,7 +53,7 @@ const execute = async (client, msg, args) => {
     quotedMsg.reply(getdata);
   } else {
     getdata = await emailVerifier(args[0]);
-    await client.sendMessage(msg.to, getdata);
+    await client.sendMessage(msgMode, getdata);
   }
 };
 

@@ -1,5 +1,5 @@
 //jshint esversion:11
-const { Client, LocalAuth } = require("whatsapp-web.js");
+const { Client, LocalAuth, ChatTypes } = require("whatsapp-web.js");
 const pmpermit = require("./helpers/pmpermit");
 const config = require("./config");
 if (config.server_mode == "true") {
@@ -88,9 +88,9 @@ client.on("message", async (msg) => {
 
 client.on("message_create", async (msg) => {
   // auto pmpermit
+  var otherChat = await (await msg.getChat()).getContact();
   try {
     if (config.pmpermit_enabled == "true") {
-      var otherChat = await (await msg.getChat()).getContact();
       if (
         msg.fromMe &&
         msg.type !== "notification_template" &&
@@ -111,18 +111,59 @@ client.on("message_create", async (msg) => {
   if (msg.fromMe && msg.body.startsWith("!")) {
     let args = msg.body.slice(1).trim().split(/ +/g);
     let command = args.shift().toLowerCase();
-
-    console.log({ command, args });
-
+    // console.log({ command, args });
+    // console.log(`msg.to : ${msg.to}`);
+    // console.log(`msg.from : ${msg.from}`);
     if (client.commands.has(command)) {
       try {
-        await client.commands.get(command).execute(client, msg, args);
+        await client.commands.get(command).execute(client, msg, args, true);
       } catch (error) {
         console.log(error);
       }
     } else {
       await client.sendMessage(
         msg.to,
+        "No such command found. Type !help to get the list of available commands"
+      );
+    }
+  } else if (msg.body.startsWith("!")) {
+    // console.log(`msg.to : ${msg.to}`);
+    // console.log(`msg.from : ${msg.from}`);
+    let args = msg.body.slice(1).trim().split(/ +/g);
+    let command = args.shift().toLowerCase();
+    // console.log(`otherChat.number : ${JSON.stringify(otherChat)}`);
+    // console.log(`otherChat.number : ${JSON.stringify(await msg.getContact())}`);
+    // console.log(`otherChat.number : ${JSON.stringify(await msg.isGroup)}`);
+    // console.log(`pmpermit.isPermitted : ${await pmpermit.isPermitted((await msg.getContact()).number)}`);
+    if (!(await pmpermit.isPermitted((await msg.getContact()).number))) {
+      await client.sendMessage(
+        msg.from,
+        "You are Not permitted to use me!\nplease request my owner to permit you first"
+      );
+      return;
+    }
+    // console.log(`otherChat : ${otherChat}`);
+    if (!(await msg.getContact()).isMyContact) {
+      await client.sendMessage(
+        msg.from,
+        "You are not in Contact list, try back later"
+      );
+      return;
+    }
+    // console.log({ command, args });
+    if (client.commands.has(command)) {
+      if (client.commands.get(command).commandType === "admin") {
+        await client.sendMessage(msg.from, "You Can`t Use Admin Commands");
+        return;
+      }
+      try {
+        await client.commands.get(command).execute(client, msg, args, false);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      await client.sendMessage(
+        msg.from,
         "No such command found. Type !help to get the list of available commands"
       );
     }

@@ -9,18 +9,22 @@ async function ud(term) {
   }
 }
 
-const execute = async (client, msg, args) => {
+const execute = async (client, msg, args, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   msg.delete(true);
   let data = await ud(args.join(" "));
   if (data == "error") {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `🙇‍♂️ *Error*\n\n` +
         "```Something Unexpected Happened while Lookup on Urban Dictionary```"
     );
   } else {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       "*Term:* ```" +
         args.join(" ") +
         "```\n\n" +

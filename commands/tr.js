@@ -25,7 +25,11 @@ async function translator(langReq, text) {
     });
 }
 
-const execute = async (client, msg, args) => {
+const execute = async (client, msg, args, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   let data;
   msg.delete(true);
   if (msg.hasQuotedMsg) {
@@ -39,12 +43,12 @@ const execute = async (client, msg, args) => {
 
   if (data == "error") {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `🙇‍♂️ *Error*\n\n` + "```Something Unexpected Happened while translate```"
     );
   } else {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `*Original (${data.ori_lang}) :* ` +
         "```" +
         data.original +

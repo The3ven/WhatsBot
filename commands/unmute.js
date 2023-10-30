@@ -1,6 +1,10 @@
 //jshint esversion:8
-const execute = async (client, msg) => {
-  if (!msg.to.includes("-")) {
+const execute = async (client, msg, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
+  if (!msgMode.includes("-")) {
     let chat = await msg.getChat();
     await chat.unmute(true);
     msg.reply(`*🗣 Unmuted*\n\nYou have been unmuted\n\n _Powered by WhatsBot_`);

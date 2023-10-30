@@ -63,25 +63,29 @@ const afkStatus = async (client, chatid) => {
   }
 };
 
-const execute = async (client, msg, args) => {
+const execute = async (client, msg, args, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   msg.delete(true);
   let mode = args.shift();
   switch (mode) {
     case "on":
-      await afkOn(client, msg.to, args.join(" "));
+      await afkOn(client, msgMode, args.join(" "));
       break;
     case "off":
-      await afkOff(client, msg.to);
+      await afkOff(client, msgMode);
       break;
     case "status":
-      await afkStatus(client, msg.to);
+      await afkStatus(client, msgMode);
       break;
     default:
       await client.sendMessage(
-        msg.to,
+        msgMode,
         `Invalid option provide. Please refer to help.`
       );
-      await client.sendMessage(msg.to, "!help afk");
+      await client.sendMessage(msgMode, "!help afk");
   }
 };
 

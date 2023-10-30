@@ -2,9 +2,13 @@
 const config = require("../config");
 const pmpermit = require("../helpers/pmpermit");
 
-const execute = async (client, msg) => {
-  if (config.pmpermit_enabled == "true" && !msg.to.includes("-")) {
-    await pmpermit.nopermit(msg.to.split("@")[0]);
+const execute = async (client, msg, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
+  if (config.pmpermit_enabled == "true" && !msgMode.includes("-")) {
+    await pmpermit.nopermit(msgMode.split("@")[0]);
     msg.reply(
       "*⛔ Not Allowed*\n\nYou are not allowed for PM\n\n _Powered by WhatsBot_"
     ); // don't change this text without discussion with Tuhin

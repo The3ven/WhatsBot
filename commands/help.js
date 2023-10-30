@@ -1,5 +1,10 @@
 //jshint esversion:8
-const execute = async (client, msg, args) => {
+const execute = async (client, msg, args, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
+  // console.log(`msgMode : ${msgMode}`);
   msg.delete(true);
   let commands = client.commands;
   if (!args.length) {
@@ -19,12 +24,13 @@ const execute = async (client, msg, args) => {
     let help = `${adminHelp}\n${infoHelp}\n${pluginHelp}\n${
       commands.get("help").help
     }`;
-    await client.sendMessage(msg.to, help);
+    // console.log(`help : ${help}`);
+    await client.sendMessage(msgMode, help);
   } else if (commands.has(args[0])) {
-    await client.sendMessage(msg.to, commands.get(args[0]).help);
+    await client.sendMessage(msgMode, commands.get(args[0]).help);
   } else {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `No command with the name *${args[0]}*...`
     );
   }

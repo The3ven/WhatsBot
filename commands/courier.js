@@ -45,18 +45,22 @@ async function getTrackingDetails(trackingService, trackingNumber) {
       return "error";
     });
 }
-const execute = async (client, msg, args) => {
+const execute = async (client, msg, args, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   msg.delete(true);
   let data = await getTrackingDetails(args[0], args[1]);
   if (data == "error") {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `🙇‍♂️ *Error*\n\n` +
         "```Something unexpected happened while fetching the courier details.```"
     );
   } else {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `🙇‍♂️ *Courier/Shipment Details*\n\n` + "```" + data.status + "```"
     );
   }

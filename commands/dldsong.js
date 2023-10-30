@@ -2,14 +2,18 @@
 const { MessageMedia } = require("whatsapp-web.js");
 const { download } = require("../helpers/song");
 
-const execute = async (client, msg, args) => {
+const execute = async (client, msg, argsisMe) => {
+  let msgMode = msgMode;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   if (msg.hasQuotedMsg) {
     msg.delete(true);
     let quotedMsg = await msg.getQuotedMessage();
     let getdata = await download(args[0], quotedMsg.id.id);
     if (getdata.status) {
       await client.sendMessage(
-        msg.to,
+        msgMode,
         new MessageMedia(
           getdata.content.image.mimetype,
           getdata.content.image.data,
@@ -18,11 +22,11 @@ const execute = async (client, msg, args) => {
         { caption: getdata.content.text }
       );
     } else {
-      await client.sendMessage(msg.to, getdata.content);
+      await client.sendMessage(msgMode, getdata.content);
     }
   } else {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       "```Search for the song with !song and then reply to the query result with this command```"
     );
   }

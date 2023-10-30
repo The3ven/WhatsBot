@@ -14,18 +14,22 @@ async function fetchweather(query) {
   return weatherfind;
 }
 
-const execute = async (client, msg, args) => {
+const execute = async (client, msg, args, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   msg.delete(true);
   var data = await fetchweather(args.join(" "));
   if (data == "error") {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `🙇‍♂️ *Error*\n\n` + "```Something Unexpected Happened to fetch Weather```"
     );
   } else {
     var weather = data[0];
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `*Today's Weather at ${weather.location.name}*\n` +
         "```" +
         weather.current.skytext +

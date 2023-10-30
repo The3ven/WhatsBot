@@ -17,7 +17,11 @@ async function readImage(attachmentData) {
   }
 }
 
-const execute = async (client, msg) => {
+const execute = async (client, msg, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   msg.delete(true);
   if (msg.hasQuotedMsg) {
     let quotedMsg = await msg.getQuotedMessage();
@@ -34,7 +38,7 @@ const execute = async (client, msg) => {
     }
   } else {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       "```Please reply to an image with text in it```"
     );
   }

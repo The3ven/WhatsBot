@@ -1,6 +1,10 @@
 //jshint esversion:8
-const execute = async (client, msg) => {
-  if (!msg.to.includes("-")) {
+const execute = async (client, msg, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
+  if (!msgMode.includes("-")) {
     await msg.reply(
       `*❌ Blocked* \n\n You have been blocked\n\n _Powered by WhatsBot_`
     );

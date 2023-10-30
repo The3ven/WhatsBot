@@ -61,20 +61,24 @@ async function gitinfo(url) {
   }
 }
 
-const execute = async (client, msg, args) => {
+const execute = async (client, msg, argsisMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   msg.delete(true);
   let data = await gitinfo(args[0]);
   if (data.status) {
     if (data.data.status) {
       await client.sendMessage(
-        msg.to,
+        msgMode,
         new MessageMedia(data.data.mimetype, data.data.data, data.data.filename)
       );
     }
-    await client.sendMessage(msg.to, data.msg);
+    await client.sendMessage(msgMode, data.msg);
   } else {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `🙇‍♂️ *Error*\n\n` + "```" + data.msg + "```"
     );
   }

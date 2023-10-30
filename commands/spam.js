@@ -1,18 +1,22 @@
 //jshint esversion:8
 const { MessageMedia } = require("whatsapp-web.js");
 
-const execute = async (client, msg, args) => {
+const execute = async (client, msg, args, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   msg.delete(true);
 
   let count = Number(args.shift());
   if (isNaN(count)) {
-    await client.sendMessage(msg.to, `🙇‍♂️ *Error*\n\n` + "```Invalid count```");
+    await client.sendMessage(msgMode, `🙇‍♂️ *Error*\n\n` + "```Invalid count```");
     return 0;
   }
   if (count > 0) count = parseInt(count);
   else {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `🙇‍♂️ *Error*\n\n` + "```Count can't be zero.```"
     );
     return 0;
@@ -28,21 +32,21 @@ const execute = async (client, msg, args) => {
 
       for (let i = 0; i < count; i++)
         await client.sendMessage(
-          msg.to,
+          msgMode,
           new MessageMedia(media.mimetype, media.data, media.filename),
           { sendMediaAsSticker: sticker }
         );
     } else {
       for (let i = 0; i < count; i++)
-        await client.sendMessage(msg.to, quotedMsg.body);
+        await client.sendMessage(msgMode, quotedMsg.body);
     }
   } else {
     if (args.length) {
       let text = args.join(" ");
-      for (let i = 0; i < count; i++) await client.sendMessage(msg.to, text);
+      for (let i = 0; i < count; i++) await client.sendMessage(msgMode, text);
     } else {
       await client.sendMessage(
-        msg.to,
+        msgMode,
         "```No text found for spamming!!! Please read !help spam.```"
       );
     }

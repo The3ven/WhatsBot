@@ -24,11 +24,15 @@ async function get() {
   };
 }
 
-const execute = async (client, msg) => {
+const execute = async (client, msg, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   msg.delete(true);
   let startdata = await get();
   await client.sendMessage(
-    msg.to,
+    msgMode,
     new MessageMedia(startdata.mimetype, startdata.data, startdata.filename),
     { caption: startdata.msg }
   );

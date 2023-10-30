@@ -1,13 +1,17 @@
 //jshint esversion:8
 const { MessageMedia } = require("whatsapp-web.js");
 
-const execute = async (client, msg) => {
+const execute = async (client, msg, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   msg.delete(true);
   let quotedMsg = await msg.getQuotedMessage();
   if (quotedMsg.hasMedia) {
     let attachmentData = await quotedMsg.downloadMedia();
     await client.sendMessage(
-      msg.to,
+      msgMode,
       new MessageMedia(
         attachmentData.mimetype,
         attachmentData.data,
@@ -17,7 +21,7 @@ const execute = async (client, msg) => {
     );
   } else {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `🙇‍♂️ *Error*\n\n` + "```No image found to make a Sticker```"
     );
   }

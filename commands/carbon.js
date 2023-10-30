@@ -24,7 +24,11 @@ async function carbon(text) {
   };
 }
 
-const execute = async (client, msg, args) => {
+const execute = async (client, msg, args, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   let data;
 
   msg.delete(true);
@@ -38,13 +42,13 @@ const execute = async (client, msg, args) => {
 
   if (data == "error") {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `🙇‍♂️ *Error*\n\n` +
         "```Something Unexpected Happened to create the Carbon.```"
     );
   } else {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       new MessageMedia(data.mimetype, data.data, data.filename),
       {
         caption:

@@ -27,26 +27,30 @@ async function getPrice(cryptoCode) {
       return "error";
     });
 }
-const execute = async (client, msg, args) => {
+const execute = async (client, msg, args, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   msg.delete(true);
   let data = await getPrice(args[0]);
   if (data == "error") {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `🙇‍♂️ *Error*\n\n` +
         "```Something unexpected happened while fetching Cryptocurrency Price```"
     );
   }
   if (data == "unsupported") {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `🙇‍♂️ *Error*\n\n` +
         "```Support for this CryptoCurrency is not yet added```"
     );
   } else {
     let date = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `Price of *${data.name}* as of ${date} is *₹ ${data.price}*`
     );
   }

@@ -2,15 +2,19 @@
 
 const { exec } = require("child_process");
 
-const execute = async (client, msg, args) => {
+const execute = async (client, msg, args, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   msg.delete(true);
   exec("cd public && " + args.join(" "), async (error, stdout, stderr) => {
     if (error) {
-      await client.sendMessage(msg.to, "*whatsbot~:* ```" + error + "```");
+      await client.sendMessage(msgMode, "*whatsbot~:* ```" + error + "```");
     } else if (stderr) {
-      await client.sendMessage(msg.to, "*whatsbot~:* ```" + stderr + "```");
+      await client.sendMessage(msgMode, "*whatsbot~:* ```" + stderr + "```");
     } else {
-      await client.sendMessage(msg.to, "*whatsbot~:* ```" + stdout + "```");
+      await client.sendMessage(msgMode, "*whatsbot~:* ```" + stdout + "```");
     }
   });
 };

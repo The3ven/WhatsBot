@@ -1,5 +1,9 @@
 //jshint esversion:8
-const execute = async (client, msg) => {
+const execute = async (client, msg, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   client.sendPresenceAvailable();
   msg.reply("```" + "I will be online from now." + "```");
 };

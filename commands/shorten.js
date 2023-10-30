@@ -20,7 +20,11 @@ async function getShortURL(input) {
       return "error";
     });
 }
-const execute = async (client, msg, args) => {
+const execute = async (client, msg, args, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   msg.delete(true);
   let data;
   if (msg.hasQuotedMsg) {
@@ -32,13 +36,13 @@ const execute = async (client, msg, args) => {
 
   if (data == "error") {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `🙇‍♂️ *Error*\n\n` +
         "```Please make sure the entered URL is in correct format.```"
     );
   } else {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `Short URL for ${data.input} is 👇\n${data.short}`
     );
   }

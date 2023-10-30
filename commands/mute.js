@@ -1,8 +1,12 @@
 //jshint esversion:8
 const config = require("../config");
 
-const execute = async (client, msg) => {
-  if (!msg.to.includes("-")) {
+const execute = async (client, msg, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
+  if (!msgMode.includes("-")) {
     let chat = await msg.getChat();
     let unmuteDate = new Date();
     unmuteDate.setSeconds(Number(unmuteDate.getSeconds()) + 3600);

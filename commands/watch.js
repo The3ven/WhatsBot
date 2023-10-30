@@ -56,24 +56,28 @@ async function getDetails(title) {
       return "error";
     });
 }
-const execute = async (client, msg, args) => {
+const execute = async (client, msg, args, isMe) => {
+  let msgMode = msg.to;
+  if (!isMe) {
+    msgMode = msg.from;
+  }
   msg.delete(true);
   let data = await getDetails(args.join(" "));
   if (data == "error") {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `🙇‍♂️ *Error*\n\n` +
         "```Something Unexpected Happened while fetching Movie/TV Show Details.```"
     );
   } else if (data == "No Results") {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       `🙇‍♂️ *No Results Found!*\n\n` +
         "```Please check the name of Movie/TV Show you have entered.```"
     );
   } else {
     await client.sendMessage(
-      msg.to,
+      msgMode,
       new MessageMedia(data.mimetype, data.thumbdata, data.filename),
       { caption: data.caption }
     );
