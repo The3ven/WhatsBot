@@ -22,6 +22,18 @@ const execute = async (client, msg, args, isMe) => {
   } else {
     link = args;
   }
+
+  current_files.forEach((file) => {
+    // console.log(file);
+    // console.log(typeof(file));
+    if (file.indexOf(".mp3") !== -1 || file.indexOf(".webm") !== -1) {
+      fs.unlinkSync(path.join(download_dir, file));
+      // console.log(file, " ✔ Deleted!");
+    }
+  });
+
+  current_files = dir_files(download_dir);
+
   if (link.length > 0) {
     let tmp_link = "";
     link = link.toString();

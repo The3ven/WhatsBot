@@ -5,13 +5,13 @@ const path = require("path");
 
 async function search(query) {
   try {
-    const response = (
-      await axios.get(`https://jiosaavn-api.vercel.app/search?query=${query}`)
-    ).data;
+    const response =
+      // await axios.get(`https://jiosaavn-api.vercel.app/search?query=${query}`)
+      (await axios.get(`https://saavn.me/search/songs?query=${query}`)).data;
 
     console.log(response);
 
-    if (response.results === "false") {
+    if (response.status === "FAILED") {
       throw "not-found";
     } else {
       let content = `*Results for* _'${query}'_\n\n`;
@@ -22,6 +22,7 @@ async function search(query) {
         }\n`;
         songarray.push({ key: i + 1, id: response.results[i].id });
       }
+      console.log(JSON.stringify(songarray));
       content += `\nReply this message with \`\`\`!dldsong [number]\`\`\` to download !\n*Ex.* !dldsong 1`;
       return { status: true, content, songarray };
     }

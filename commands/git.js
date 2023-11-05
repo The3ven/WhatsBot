@@ -61,7 +61,7 @@ async function gitinfo(url) {
   }
 }
 
-const execute = async (client, msg, argsisMe) => {
+const execute = async (client, msg, args, isMe) => {
   let msgMode = msg.to;
   if (!isMe) {
     msgMode = msg.from;
