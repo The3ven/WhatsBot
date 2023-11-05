@@ -64,7 +64,9 @@ const execute = async (client, msg, args, isMe) => {
         }
         await client.sendMessage(
           msgMode,
-          "*YTDL~:* ```Sending " + tmp_song_name + "```"
+          "*YTDL~:* ```Sending " +
+            tmp_song_name +
+            "```\n\nDownloaded By : *FIRE7LY_BOT*"
         );
       } catch (err) {
         await client.sendMessage(
