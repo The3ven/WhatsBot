@@ -11,6 +11,7 @@ const execute = async (client, msg, args, isMe) => {
 
   msg.delete(true);
   let getdata = await search(args.join(" "));
+  // console.log("getdata : ", JSON.stringify(getdata));
   let sendmessage = await client.sendMessage(msgMode, getdata.content); // have to grab the message ID
   if (getdata.status) {
     fs.writeFileSync(

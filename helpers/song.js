@@ -9,20 +9,21 @@ async function search(query) {
       // await axios.get(`https://jiosaavn-api.vercel.app/search?query=${query}`)
       (await axios.get(`https://saavn.me/search/songs?query=${query}`)).data;
 
-    console.log(response);
+    // console.log(response);
 
     if (response.status === "FAILED") {
       throw "not-found";
     } else {
       let content = `*Results for* _'${query}'_\n\n`;
       let songarray = [];
-      for (let i = 0; i < response.results.length; i++) {
-        content += `*${i + 1}.* ${response.results[i].title} - ${
-          response.results[i].more_info.singers
+      // console.log("response : \n\n\n", JSON.stringify(response),"\n\n\n");
+      for (let i = 0; i < response.data.results.length; i++) {
+        content += `*${i + 1}.* ${response.data.results[i].name} - ${
+          response.data.results[i].primaryArtists
         }\n`;
-        songarray.push({ key: i + 1, id: response.results[i].id });
+        songarray.push({ key: i + 1, id: response.data.results[i].id });
       }
-      console.log(JSON.stringify(songarray));
+      // console.log(JSON.stringify(songarray));
       content += `\nReply this message with \`\`\`!dldsong [number]\`\`\` to download !\n*Ex.* !dldsong 1`;
       return { status: true, content, songarray };
     }
@@ -46,26 +47,37 @@ async function download(songkey, id) {
       fs.readFileSync(path.join(__dirname, `../cache/song~${id}.json`), "utf8")
     );
     let song = saveddata.find((d) => d.key === pretifiedsongkey);
-
+    console.log("\n\n\nsong : ", JSON.stringify(song), "\n\n\n");
     if (song) {
       try {
-        let data = (
-          await axios.get(`https://jiosaavn-api.vercel.app/song?id=${song.id}`)
-        ).data;
-
+        let data = (await axios.get(`https://saavn.me/songs?id=${song.id}`))
+          .data;
+        console.log("\n\n\ndata : ", JSON.stringify(data), "\n\n\n");
+        console.log(
+          "\n\n\nSong : ",
+          data.data[0].image[data.data[0].image.length - 1]
+        );
         return {
           status: true,
           content: {
             text:
-              `🎶 *${data.song}* _(${data.year})_\n\n📀 *Artist :*  ` +
+              `🎶 *${data.data[0].name}* _(${data.data[0].year})_\n\n📀 *Artist :*  ` +
               "```" +
-              data.singers +
+              data.data[0].primaryArtists +
               "```\n📚 *Album :*  " +
               "```" +
-              data.album +
+              data.data[0].album.name +
               "```" +
-              `\n\n*Download Url* 👇\nhttps://musicder-prod.vercel.app/download/${data.id}`,
-            image: await image(data.image),
+              `\n\n*Download Url* 👇\n${
+                data.data[0].downloadUrl[data.data[0].downloadUrl.length - 1]
+                  .link
+              }`,
+            image: await image(
+              data.data[0].image[data.data[0].image.length - 1].link
+            ),
+            url: `${
+              data.data[0].downloadUrl[data.data[0].downloadUrl.length - 1].link
+            }`,
           },
         };
       } catch (w) {
