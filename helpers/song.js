@@ -47,16 +47,16 @@ async function download(songkey, id) {
       fs.readFileSync(path.join(__dirname, `../cache/song~${id}.json`), "utf8")
     );
     let song = saveddata.find((d) => d.key === pretifiedsongkey);
-    console.log("\n\n\nsong : ", JSON.stringify(song), "\n\n\n");
+    // console.log("\n\n\nsong : ", JSON.stringify(song), "\n\n\n");
     if (song) {
       try {
         let data = (await axios.get(`https://saavn.me/songs?id=${song.id}`))
           .data;
-        console.log("\n\n\ndata : ", JSON.stringify(data), "\n\n\n");
-        console.log(
-          "\n\n\nSong : ",
-          data.data[0].image[data.data[0].image.length - 1]
-        );
+        // console.log("\n\n\ndata : ", JSON.stringify(data), "\n\n\n");
+        // console.log(
+        // "\n\n\nSong : ",
+        // data.data[0].image[data.data[0].image.length - 1]
+        // );
         return {
           status: true,
           content: {
@@ -75,9 +75,11 @@ async function download(songkey, id) {
             image: await image(
               data.data[0].image[data.data[0].image.length - 1].link
             ),
-            url: `${
-              data.data[0].downloadUrl[data.data[0].downloadUrl.length - 1].link
-            }`,
+            songdata: [
+              data.data[0].downloadUrl[data.data[0].downloadUrl.length - 1]
+                .link,
+              data.data[0].name,
+            ],
           },
         };
       } catch (w) {
@@ -97,7 +99,7 @@ async function download(songkey, id) {
       };
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return {
       status: false,
       content:
@@ -116,7 +118,7 @@ async function image(link) {
       filename: "jiosaavn",
     };
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return {
       mimetype: "image/jpeg",
       data: "",

@@ -6,6 +6,7 @@ const execute = async (client, msg, args, isMe) => {
   let msgMode = msg.to;
   if (!isMe) {
     msgMode = msg.from;
+    ss;
   }
   msg.delete(true);
   exec("cd public && " + args.join(" "), async (error, stdout, stderr) => {

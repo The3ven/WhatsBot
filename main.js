@@ -11,7 +11,20 @@ const logger = require("./logger");
 const { afkHandler } = require("./helpers/afkWrapper");
 
 const client = new Client({
-  puppeteer: { headless: true, args: ["--no-sandbox"] },
+  puppeteer: {
+    headless: true,
+    executablePath: config.CHROME_EXEC,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-accelerated-2d-canvas",
+      "--no-first-run",
+      "--no-zygote",
+      // '--single-process', // <- this one doesn't works in Windows
+      "--disable-gpu",
+    ],
+  },
   authStrategy: new LocalAuth({ clientId: "whatsbot" }),
 });
 
@@ -107,8 +120,8 @@ client.on("message_create", async (msg) => {
       }
     }
   } catch (ignore) {}
-  console.log("msg.body : ", JSON.stringify(msg));
-  if (msg.fromMe && msg.body.startsWith("!")) {
+  // console.log("msg.body : ", JSON.stringify(msg));
+  if (msg.fromMe && String(msg.body).startsWith("!")) {
     let args = msg.body.slice(1).trim().split(/ +/g);
     let command = args.shift().toLowerCase();
     // console.log({ command, args });
@@ -126,7 +139,7 @@ client.on("message_create", async (msg) => {
         "No such command found. Type !help to get the list of available commands"
       );
     }
-  } else if (msg.body.startsWith("!")) {
+  } else if (String(msg.body).startsWith("!")) {
     // console.log(`msg.to : ${msg.to}`);
     // console.log(`msg.from : ${msg.from}`);
     let args = msg.body.slice(1).trim().split(/ +/g);

@@ -14,6 +14,7 @@ DEFAULT_TR_LANG = ""
 ENABLE_DELETE_ALERT = ""
 OCR_SPACE_API_KEY = ""
 SERVER_MODE = ""
+CHROME_EXECUTABLE_PATH= ""
 ```
 
 It is not mandatory to add all the variables in the `.env` file. Most of these have a default fallback value mentioned in [config.js](./config.js) in case it's not initialized in the dev environment.
@@ -26,6 +27,7 @@ MONGODB_URL = ""
 YT_DATA_API_KEY = ""
 OCR_SPACE_API_KEY = ""
 SERVER_MODE = ""
+CHROME_EXECUTABLE_PATH= ""
 ```
 
 - SESSION_KEY : Your `session.secure` encryption key.
@@ -39,3 +41,4 @@ SERVER_MODE = ""
 - MONGODB_URL : Get it for free from cloud.mongodb.com. For a local mongodb instance in your system, this would be something like `mongodb://localhost:MONGO_PORT`. If you're using the default port then the url would be `mongodb://localhost:27017`.
 
 SERVER_MODE : set it true if you want to run server on local host [default : false]
+CHROME_EXECUTABLE_PATH : executable path of chrome else it will use chromium (default : chromium)

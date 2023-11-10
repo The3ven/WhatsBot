@@ -2,6 +2,18 @@
 const fs = require("fs");
 require("dotenv").config();
 
+if (!fs.existsSync(process.env.CHROME_EXECUTABLE_PATH)) {
+  if (
+    !fs.existsSync(
+      "C:Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+    )
+  ) {
+    process.env.CHROME_EXECUTABLE_PATH = "";
+  }
+  process.env.CHROME_EXECUTABLE_PATH =
+    "C:Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe";
+}
+
 module.exports = {
   session_key: process.env.SESSION_KEY,
   timezone:
@@ -12,4 +24,5 @@ module.exports = {
   enable_delete_alert: process.env.ENABLE_DELETE_ALERT || "true",
   ocr_space_api_key: process.env.OCR_SPACE_API_KEY || "",
   server_mode: process.env.SERVER_MODE || "false",
+  CHROME_EXEC: process.env.CHROME_EXECUTABLE_PATH,
 };
