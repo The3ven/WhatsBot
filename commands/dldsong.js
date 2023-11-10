@@ -36,29 +36,30 @@ const execute = async (client, msg, args, isMe) => {
             // const song_path = `D:\\Working Projects\\WhatsBot\\public\\Kun Faaya Kun.mp4`
             // console.log("song_path : ", typeof song_path);
             if (song_path !== null) {
-              // try {
-              await client.sendMessage(
-                msgMode,
-                MessageMedia.fromFilePath(song_path)
-              );
-              Exist(song_path)
-                ? fs.unlinkSync(song_path)
-                : console.log("Dosent song exist");
-              // console.log(
-              //   "Download url  :",
-              //   JSON.stringify(getdata.content.songdata)
-              // );
-              // } catch (e) {
-              //   await client.sendMessage(
-              //     msgMode,
-              //     `🙇‍♂️ *Error*\n\n` +
-              //       "```We are not able to send mp3 song```" +
-              //       `\n\n${e}`
-              //   );
-              // }
+              try {
+                await client.sendMessage(
+                  msgMode,
+                  MessageMedia.fromFilePath(song_path)
+                );
+                Exist(song_path)
+                  ? fs.unlinkSync(song_path)
+                  : console.log("Dosent song exist");
+                // console.log(
+                //   "Download url  :",
+                //   JSON.stringify(getdata.content.songdata)
+                // );
+              } catch (e) {
+                await client.sendMessage(
+                  msgMode,
+                  `🙇‍♂️ *Error*\n\n` + "```We are not able to send mp3 song```"
+                );
+              }
             }
           } catch (err) {
-            console.log(err);
+            await client.sendMessage(
+              msgMode,
+              `🙇‍♂️ *Error*\n\n` + "```We are not able to download mp3 song```"
+            );
           }
         }
       } catch {

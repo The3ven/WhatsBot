@@ -2,12 +2,13 @@ const { Client, LocalAuth } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const { write, clean } = require("./manage");
 const readline = require("readline");
+const config = require("./config");
 
 clean();
 
 const client = new Client({
   puppeteer: { headless: true, args: ["--no-sandbox"] },
-  executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+  executablePath: config.CHROME_EXEC,
   authStrategy: new LocalAuth({ clientId: "whatsbot" }),
 });
 
