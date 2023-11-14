@@ -20,6 +20,12 @@ const execute = async (client, msg, args, isMe) => {
 
     let getdata = await download(args[0], quotedMsgid);
     if (getdata.status) {
+      // Send song info to chat
+      let song_path = path.join(
+        __dirname,
+        "../public",
+        `${getdata.content.songdata[1]}.mp4`
+      );
       try {
         await client.sendMessage(
           msgMode,
@@ -30,44 +36,65 @@ const execute = async (client, msg, args, isMe) => {
           ),
           { caption: getdata.content.text }
         );
-        if (getdata.content.songPath !== null) {
-          try {
-            const song_path = await dldsong(getdata.content.songdata);
-            // const song_path = `D:\\Working Projects\\WhatsBot\\public\\Kun Faaya Kun.mp4`
-            // console.log("song_path : ", typeof song_path);
-            if (song_path !== null) {
-              try {
-                await client.sendMessage(
-                  msgMode,
-                  MessageMedia.fromFilePath(song_path)
-                );
-                Exist(song_path)
-                  ? fs.unlinkSync(song_path)
-                  : console.log("Dosent song exist");
-                // console.log(
-                //   "Download url  :",
-                //   JSON.stringify(getdata.content.songdata)
-                // );
-              } catch (e) {
-                await client.sendMessage(
-                  msgMode,
-                  `🙇‍♂️ *Error*\n\n` + "```We are not able to send mp3 song```"
-                );
-              }
-            }
-          } catch (err) {
-            await client.sendMessage(
-              msgMode,
-              `🙇‍♂️ *Error*\n\n` + "```We are not able to download mp3 song```"
-            );
-          }
-        }
-      } catch {
+      } catch (e) {
+        // Send error to chat
         await client.sendMessage(
           msgMode,
-          `🙇‍♂️ *Error*\n\n` + "```We are not able to send song info```"
+          `🙇‍♂️ *Error*\n\n` +
+            "```We are not able to send song info```\n" +
+            `${e}`
         );
+        console.log(`e ${e}`);
       }
+      try {
+        // Download song from song info Json response
+        let split_url = getdata.content.songdata[0].split("/");
+        let url = "/" + split_url.pop();
+        let baseUrl = "https://aac.saavncdn.com/" + split_url.pop();
+        console.log(url);
+        console.log(baseUrl);
+        const downloader = axios.create({
+          baseURL: baseUrl,
+          timeout: 20000,
+          responseType: "stream",
+        });
+        const response = await downloader.get(url, {
+          onDownloadProgress: (progressEvent) => {
+            const total = parseFloat(progressEvent.total);
+            const current = progressEvent.loaded;
+            const percentCompleted = Math.floor((current / total) * 100);
+            console.log("Download progress:", percentCompleted);
+            // Send progress update to the chat
+            // await client.sendMessage(
+            //   msgMode,
+            //   `Download progress: ${percentCompleted}%`
+            // );
+          },
+        });
+        const writer = fs.createWriteStream(song_path);
+        await new Promise((resolve, reject) => {
+          response.data
+            .on("end", resolve)
+            .on("error", (error) => {
+              console.error("Error during download:", error);
+              reject(error);
+            })
+            .pipe(writer);
+        });
+        console.log("Download Done");
+        await client.sendMessage(msgMode, MessageMedia.fromFilePath(song_path));
+      } catch (e) {
+        await client.sendMessage(
+          msgMode,
+          `🙇‍♂️ *Error*\n\n` +
+            "```We are not able to download mp3 song```\n" +
+            `${e}`
+        );
+        console.log(`e ${e}`);
+      }
+      Exist(song_path)
+        ? fs.unlinkSync(song_path)
+        : console.log("song dosen`t  exist");
     } else {
       await client.sendMessage(msgMode, getdata.content);
     }
@@ -79,34 +106,50 @@ const execute = async (client, msg, args, isMe) => {
   }
 };
 
-async function dldsong(data) {
-  // console.log(JSON.stringify(data));
-  let song_path = path.join(__dirname, "../public", `${data[1]}.mp4`);
-  // console.log("Song NAme : ", song_path);
-  if (!Exist(song_path)) {
-    try {
-      const response = await axios({
-        method: "get",
-        url: data[0],
-        responseType: "stream",
-      });
+// async function dldsong(data) {
+//   // console.log(JSON.stringify(data));
+//   let song_path = path.join(__dirname, "../public", `${data[1]}.mp4`);
+//   if (!Exist(song_path)) {
+//     let split_url = data[0].split("/");
+//     let url = "/" + split_url.pop();
+//     console.log(url);
+//     let baseUrl = "https://aac.saavncdn.com/" + split_url.pop();
+//     console.log(baseUrl);
+//     try {
+//       const client = axios.create({
+//         baseURL: baseUrl,
+//         timeout: 20000,
+//         responseType: "stream",
+//       });
 
-      await new Promise((resolve, reject) => {
-        const writer = fs.createWriteStream(song_path);
-        response.data.pipe(writer);
-        writer.on("finish", resolve);
-        writer.on("error", reject);
-      });
-      // console.log("Download completed");
-      return song_path;
-    } catch (error) {
-      // console.log(error);
-      return null;
-    }
-  } else {
-    return song_path;
-  }
-}
+//       let result = await client
+//         .get(url, {
+//           onDownloadProgress: async (progressEvent) => {
+//             // console.log(progressEvent);
+//             const total = parseFloat(progressEvent.total);
+//             const current = progressEvent.loaded;
+//             let percentCompleted = Math.floor((current / total) * 100);
+//             console.log("completed: ", percentCompleted);
+//           },
+//         })
+//         .then((res) => {
+//           return res.data;
+//         });
+//       new Promise(async (resolve, reject) => {
+//         const writer = fs.createWriteStream(song_path);
+//         await result.pipe(writer);
+//         writer.on("finish", resolve);
+//         writer.on("error", reject);
+//       });
+//       // Exist(song_path) ? (return song_path) : (return null)
+//     } catch (e) {
+//       console.log(`e ${e}`);
+//       return null;
+//     }
+//   } else {
+//     return song_path;
+//   }
+// }
 
 module.exports = {
   name: "Download Song",

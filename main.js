@@ -12,7 +12,7 @@ const { afkHandler } = require("./helpers/afkWrapper");
 
 const client = new Client({
   puppeteer: {
-    headless: true,
+    headless: false,
     executablePath: config.CHROME_EXEC,
     args: [
       "--no-sandbox",
