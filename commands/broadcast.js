@@ -10,7 +10,7 @@ const execute = async (client, msg, args, isMe) => {
   try {
     numbers = args.pop().toString().split(",");
     brodcast_msg = args.join(" ");
-    if (isNaN(numbers)) {
+    if (isNaN(numbers[0])) {
       await client.sendMessage(
         msgMode,
         `🙇‍♂️ *Error*\n Seems like you forget to provide number(s) to broadcast messege`
@@ -22,7 +22,7 @@ const execute = async (client, msg, args, isMe) => {
       `🙇‍♂️ *Error*\n Invalid command\nPlease use !help broadcast to check usage of this command`
     );
   }
-  if (!isNaN(numbers)) {
+  if (!isNaN(numbers[0])) {
     numbers.forEach(async (number) => {
       console.log("numbers : ", number);
       const sanitized_number = number.toString().replace(/[- )(]/g, ""); // remove unnecessary chars from the number
