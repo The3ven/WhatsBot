@@ -1,17 +1,33 @@
 // Add values if you are not using env vars
 const fs = require("fs");
 require("dotenv").config();
+const path = require("path");
 
-if (!fs.existsSync(process.env.CHROME_EXECUTABLE_PATH)) {
-  if (
-    !fs.existsSync(
-      "C:Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
-    )
-  ) {
-    process.env.CHROME_EXECUTABLE_PATH = "";
+if (process.env.USE_CHROME === "true") {
+  const isWin = process.platform === "win32";
+  const islinux = process.platform === "linux";
+  if (isWin) {
+    const ChromePaths = [
+      "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+      "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    ];
+    for (const chrome_path of ChromePaths) {
+      if (fs.existsSync(chrome_path)) {
+        process.env.CHROME_EXECUTABLE_PATH = chrome_path;
+      }
+    }
+  } else if (islinux) {
+    const chromeBins = ["google-chrome", "google-chrome-stable"];
+    const dirs = ["/usr/bin", "/bin"];
+    for (const dir of dirs) {
+      for (const bin of chromeBins) {
+        const binPath = path.join(dir, bin);
+        if (fs.existsSync(binPath)) {
+          process.env.CHROME_EXECUTABLE_PATH = binPath;
+        }
+      }
+    }
   }
-  process.env.CHROME_EXECUTABLE_PATH =
-    "C:Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe";
 }
 
 module.exports = {

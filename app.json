@@ -38,9 +38,9 @@
       "description": "If true, then server will run on local host",
       "value": "false"
     },
-    "CHROME_EXECUTABLE_PATH": {
-      "description": "If pass a executable path of chrome then it will use chrome insted of chromium",
-      "value": ""
+    "USE_CHROME": {
+      "description": "if true it will find and use chrome bin default is chromium",
+      "value": "false"
     }
   }
 }

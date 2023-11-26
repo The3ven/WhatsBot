@@ -8,7 +8,13 @@ const execute = async (client, msg, args, isMe) => {
   if (!isMe) {
     msgMode = msg.from;
   }
-
+  if (!args.length) {
+    await client.sendMessage(
+      msgMode,
+      `🙇‍♂️ *Error*\n\n` + "```No input Provided Please provide a input```"
+    );
+    return;
+  }
   msg.delete(true);
   let getdata = await search(args.join(" "));
   // console.log("getdata : ", JSON.stringify(getdata));

@@ -44,15 +44,15 @@ const execute = async (client, msg, args, isMe) => {
             "```We are not able to send song info```\n" +
             `${e}`
         );
-        console.log(`e ${e}`);
+        // console.log(`e ${e}`);
       }
       try {
         // Download song from song info Json response
         let split_url = getdata.content.songdata[0].split("/");
         let url = "/" + split_url.pop();
         let baseUrl = "https://aac.saavncdn.com/" + split_url.pop();
-        console.log(url);
-        console.log(baseUrl);
+        // console.log(url);
+        // console.log(baseUrl);
         const downloader = axios.create({
           baseURL: baseUrl,
           timeout: 20000,
@@ -63,7 +63,7 @@ const execute = async (client, msg, args, isMe) => {
             const total = parseFloat(progressEvent.total);
             const current = progressEvent.loaded;
             const percentCompleted = Math.floor((current / total) * 100);
-            console.log("Download progress:", percentCompleted);
+            // console.log("Download progress:", percentCompleted);
             // Send progress update to the chat
             // await client.sendMessage(
             //   msgMode,
@@ -81,7 +81,7 @@ const execute = async (client, msg, args, isMe) => {
             })
             .pipe(writer);
         });
-        console.log("Download Done");
+        // console.log("Download Done");
         await client.sendMessage(msgMode, MessageMedia.fromFilePath(song_path));
       } catch (e) {
         await client.sendMessage(
@@ -90,7 +90,7 @@ const execute = async (client, msg, args, isMe) => {
             "```We are not able to download mp3 song```\n" +
             `${e}`
         );
-        console.log(`e ${e}`);
+        // console.log(`e ${e}`);
       }
       Exist(song_path)
         ? fs.unlinkSync(song_path)

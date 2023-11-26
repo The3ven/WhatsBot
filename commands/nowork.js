@@ -1,11 +1,20 @@
-const Company_holiday_list = require("../public/Company_Holiday.json");
-
+const fs = require("fs");
 const execute = async (client, msg, args, isMe) => {
   let month = "";
   let msgMode = msg.to;
   if (!isMe) {
     msgMode = msg.from;
   }
+  const Company_holiday_list_json = "../public/Company_Holiday.json";
+  if (!fs.existsSync(Company_holiday_list_json)) {
+    await client.sendMessage(
+      msgMode,
+      `🙇‍♂️ *Error*\n\n` +
+        "```Company_holiday_list_json  dosen`t exist please add it and try again later```"
+    );
+    return;
+  }
+  const Company_holiday_list = require(Company_holiday_list);
   if (args.length > 0) {
     month = args[0];
   }
