@@ -5,14 +5,13 @@ const { MessageMedia } = require("whatsapp-web.js");
 const axios = require("axios");
 
 async function carbon(text) {
+  let link = `https://carbon.now.sh/embed/?code=${text.replace(
+    / /gi,
+    "+"
+  )}&theme=3024-night&backgroundColor=rgba(36, 75, 115)`;
+  console.log("link : ", link);
   let respoimage = await axios
-    .get(
-      `https://carbonnowsh.herokuapp.com/?code=${text.replace(
-        / /gi,
-        "+"
-      )}&theme=darcula&backgroundColor=rgba(36, 75, 115)`,
-      { responseType: "arraybuffer" }
-    )
+    .get(link, { responseType: "arraybuffer" })
     .catch(function (error) {
       return "error";
     });
@@ -39,7 +38,7 @@ const execute = async (client, msg, args, isMe) => {
   } else {
     data = await carbon(args.join(" "));
   }
-
+  console.log("data : ", data);
   if (data == "error") {
     await client.sendMessage(
       msgMode,

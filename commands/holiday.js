@@ -1,26 +1,27 @@
 //jshint esversion:8
 const axios = require("axios");
 const { HOLIDAY_API_KEY } = require("../config");
+const { dmy_formatter } = require("../helpers/lamp");
 const csp = require("country-state-picker");
-let year = "";
-let month = "";
-let day = "";
 let base_url = "https://calendarific.com/api/v2/holidays?&api_key=";
 
 const execute = async (client, msg, args, isMe) => {
-  console.log("args.length", args.length);
-  console.log("args", args);
+  // console.log("args.length", args.length);
+  // console.log("args", args);
   let response;
   let holiday_search_data = "";
-  year = "";
-  month = "";
-  day = "";
-  console.log("day : ", day);
-  console.log("month : ", month);
-  console.log("year : ", year);
+  let year = "";
+  let month = "";
+  let day = "";
+  // console.log("day : ", day);
+  // console.log("month : ", month);
+  // console.log("year : ", year);
   if (args.length > 0) {
     holiday_search_data = args[0].toUpperCase();
-    dmy_formatter(holiday_search_data);
+    let TimeDate = dmy_formatter(holiday_search_data);
+    year = TimeDate.year;
+    month = TimeDate.month;
+    day = TimeDate.day;
   }
   let msgMode = msg.to;
   if (!isMe) {
@@ -92,17 +93,17 @@ const execute = async (client, msg, args, isMe) => {
     );
     return;
   }
-  console.log("day : ", day);
-  console.log("month : ", month);
-  console.log("year : ", year);
+  // console.log("day : ", day);
+  // console.log("month : ", month);
+  // console.log("year : ", year);
 
   let url = `${base_url}${HOLIDAY_API_KEY}&country=${country}&year=${year}&day=${day}&month=${month}&type=${type}`;
 
-  console.log("URL : ", url);
+  // console.log("URL : ", url);
   try {
     response = await axios.get(url);
   } catch (e) {
-    console.log(e);
+    // console.log(e);
     await client.sendMessage(
       msgMode,
       `🙇‍♂️ *Error*\n\n` +
@@ -122,11 +123,11 @@ const execute = async (client, msg, args, isMe) => {
     return;
   }
 
-  console.log("data : ", response.data.response.holidays);
+  // console.log("data : ", response.data.response.holidays);
   try {
     if (response.data.response.holidays.length > 1) {
       response.data.response.holidays.forEach(async (Json) => {
-        console.log(Json);
+        // console.log(Json);
         await client.sendMessage(
           msgMode,
           `*Name :* _${Json.name}_\n*description :* _${Json.description}_\n*Date :* _${Json.date.datetime.day}-${Json.date.datetime.month}-${Json.date.datetime.year}_\n*Holiday Type :* ${Json.type[0]}`
@@ -158,32 +159,32 @@ const execute = async (client, msg, args, isMe) => {
         `${response.data.response}`
     );
   }
-  console.log("Im at  end");
+  // console.log("Im at  end");
 };
 
-const dmy_formatter = (str) => {
-  // console.log("str : ", str);
-  let idx_D = str.indexOf("D"),
-    idx_M = str.indexOf("M"),
-    idx_Y = str.indexOf("Y");
-  if (idx_D >= 0) {
-    day = parser(str, idx_D);
-  }
-  if (idx_M >= 0) {
-    month = parser(str, idx_M);
-  }
-  if (idx_Y >= 0) {
-    idx_M === -1 ? (month = "") : "";
-    year = parser(str, idx_Y);
-  }
-};
+// const dmy_formatter = (str) => {
+//   // console.log("str : ", str);
+//   let idx_D = str.indexOf("D"),
+//     idx_M = str.indexOf("M"),
+//     idx_Y = str.indexOf("Y");
+//   if (idx_D >= 0) {
+//     day = parser(str, idx_D);
+//   }
+//   if (idx_M >= 0) {
+//     month = parser(str, idx_M);
+//   }
+//   if (idx_Y >= 0) {
+//     idx_M === -1 ? (month = "") : "";
+//     year = parser(str, idx_Y);
+//   }
+// };
 
-const parser = (str, idx) => {
-  let value = str.substring(idx + 1, idx + 3);
-  if (isNaN(value[0])) return null;
-  isNaN(value[1]) ? (value = value[0]) : "";
-  return value;
-};
+// const parser = (str, idx) => {
+//   let value = str.substring(idx + 1, idx + 3);
+//   if (isNaN(value[0])) return null;
+//   isNaN(value[1]) ? (value = value[0]) : "";
+//   return value;
+// };
 
 function getDaysInMonth(month, year) {
   const date = new Date(year, month + 1, 0);

@@ -1,5 +1,7 @@
 //jshint esversion:8
 let last_msg = "";
+const { whatsapp_number_verifayer } = require("../helpers/lamp");
+
 const execute = async (client, msg, args, isMe) => {
   let msgMode = msg.to;
   if (!isMe) {
@@ -27,38 +29,31 @@ const execute = async (client, msg, args, isMe) => {
   } catch {
     await client.sendMessage(
       msgMode,
-      `🙇‍♂️ *Error*\n Invalid command\nPlease use !help broadcast to check usage of this command`
+      `🙇‍♂️ *Error*\n Invalid command arguments\nPlease use !help broadcast to check usage of this command`
     );
   }
 
   if (last_msg !== broadcast_msg) {
     numbers.forEach(async (number) => {
-      // console.log("numbers : ", number);
-      const sanitized_number = number.toString().replace(/[- )(]/g, ""); // remove unnecessary chars from the number
-      const final_number = `91${sanitized_number.substring(
-        sanitized_number.length - 10
-      )}`; // add 91 before the number here 91 is country code of India
-
-      const number_details = await client.getNumberId(final_number); // get mobile number details
-
-      if (number_details) {
+      let whatsapp_number = await whatsapp_number_verifayer(client, number);
+      if (whatsapp_number) {
         try {
-          await client.sendMessage(number_details._serialized, broadcast_msg);
+          await client.sendMessage(whatsapp_number._serialized, broadcast_msg);
           await client.sendMessage(
             msgMode,
-            `${broadcast_msg} successfully sended to ${final_number}`
+            `${broadcast_msg} successfully sended to ${whatsapp_number.user}`
           );
           last_msg = broadcast_msg;
         } catch {
           await client.sendMessage(
             msgMode,
-            `🙇‍♂️ *Error*\n while sending ${broadcast_msg} to ${final_number}`
+            `🙇‍♂️ *Error*\n while sending ${broadcast_msg} to ${whatsapp_number.user}`
           );
         }
       } else {
         await client.sendMessage(
           msgMode,
-          `🙇‍♂️ *Error*\n${final_number} Mobile number is not registered`
+          `🙇‍♂️ *Error*\n${number} Mobile number is not registered`
         );
       }
     });

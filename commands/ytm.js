@@ -4,7 +4,8 @@ const { spawn } = require("child_process");
 const { dir_files } = require("../helpers/dir_lister");
 const { checkArray } = require("../helpers/array_checker");
 const fs = require("fs");
-const path = require("path").win32;
+const path = require("path");
+const config = require("../config");
 
 const execute = async (client, msg, args, isMe) => {
   let msgMode = msg.to;
@@ -42,17 +43,22 @@ const execute = async (client, msg, args, isMe) => {
     tmp_link = link.match(rx);
     link = "http://www.youtube.com/watch?v=" + tmp_link[1];
     process.env.YTDL_LINK = link;
-    const bat = spawn("cmd.exe", ["/c", "cd bin && ytm.bat"]);
-
-    bat.stdout.on("data", async (data) => {
+    let downloader_script = "";
+    if (config.HOST_ENV === "win32") {
+      downloader_script = spawn("cmd.exe", ["/c", "cd bin && ytm.bat"]);
+    }
+    if (config.HOST_ENV === "linux") {
+      downloader_script = spawn("bin/ytm.sh");
+    }
+    downloader_script.stdout.on("data", async (data) => {
       await client.sendMessage(msgMode, "*YTDL~:* ```" + data + "```");
     });
 
-    bat.stderr.on("data", async (data) => {
+    downloader_script.stderr.on("data", async (data) => {
       await client.sendMessage(msgMode, "*YTDL~:* ```" + data + "```");
     });
 
-    bat.on("exit", async (code, signal) => {
+    downloader_script.on("exit", async (code, signal) => {
       if (code) {
         await client.sendMessage(
           msgMode,
