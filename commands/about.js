@@ -22,7 +22,7 @@ const execute = async (client, msg, args, isMe) => {
     );
   }
 
-  console.log(Status_msg);
+  // console.log(Status_msg);
 };
 
 module.exports = {

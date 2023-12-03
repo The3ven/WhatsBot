@@ -2,7 +2,7 @@
 // Coded by Sumanjay (https://github.com/cyberboysumanjay)
 const { MessageMedia } = require("whatsapp-web.js");
 const axios = require("axios");
-
+// TODO : Fix this
 async function getDetails(title) {
   let mainconfig = {
     method: "get",

@@ -9,7 +9,7 @@ async function carbon(text) {
     / /gi,
     "+"
   )}&theme=3024-night&backgroundColor=rgba(36, 75, 115)`;
-  console.log("link : ", link);
+  // console.log("link : ", link);
   let respoimage = await axios
     .get(link, { responseType: "arraybuffer" })
     .catch(function (error) {
@@ -38,7 +38,7 @@ const execute = async (client, msg, args, isMe) => {
   } else {
     data = await carbon(args.join(" "));
   }
-  console.log("data : ", data);
+  // console.log("data : ", data);
   if (data == "error") {
     await client.sendMessage(
       msgMode,

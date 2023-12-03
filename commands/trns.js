@@ -45,7 +45,7 @@ const execute = async (client, msg, args, isMe) => {
     }
     // transaction_source_status
     else {
-      console.log("Here #3");
+      // console.log("Here #3");
       const d = new Date();
       let dt = "",
         mt = "";

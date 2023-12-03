@@ -56,7 +56,7 @@ const dmy_formatter = (str) => {
     dmy_arr.push("");
   }
   if (idx_Min >= 0) {
-    console.log("parser(str, idx_Min) : ", parser(str, idx_Min));
+    // console.log("parser(str, idx_Min) : ", parser(str, idx_Min));
     dmy_arr.push(parser(str, idx_Min));
   } else {
     dmy_arr.push("");

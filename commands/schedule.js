@@ -21,7 +21,7 @@ const execute = async (client, msg, args, isMe) => {
   // msg.delete(true);
   /*  Set Command to shedule followed by user argument assuem command here as task   */
   Task = args.shift().toLowerCase();
-  console.log("Task : ", Task);
+  //   console.log("Task : ", Task);
   /**
    * @param scheduleDate - a date and time object to run schedule task
    * Date to run te task
@@ -39,16 +39,16 @@ const execute = async (client, msg, args, isMe) => {
   try {
     target = args.pop();
     schedule_msg = args.join(" ");
-    console.log("msg : ", schedule_msg);
+    // console.log("msg : ", schedule_msg);
     // console.log("arguments : ", arguments);
-    console.log("scheduleDate : ", scheduleDate);
-    console.log("target : ", target);
+    // console.log("scheduleDate : ", scheduleDate);
+    // console.log("target : ", target);
     let future_date = future_date_time_finder(
       dmy_formatter(scheduleDate.toUpperCase())
     );
     schedule_date = new Date(future_date);
-    console.log("future_date : ", future_date);
-    console.log(" new Date(future_date) : ", schedule_date);
+    // console.log("future_date : ", future_date);
+    // console.log(" new Date(future_date) : ", schedule_date);
     if (isNaN(target)) {
       await client.sendMessage(
         msgMode,
@@ -67,7 +67,7 @@ const execute = async (client, msg, args, isMe) => {
   if (Task === "msg") {
     try {
       let whatsapp_number = await whatsapp_number_verifayer(client, target);
-      console.log("whatsapp_number :", whatsapp_number);
+      // console.log("whatsapp_number :", whatsapp_number);
       if (whatsapp_number) {
         try {
           let Scheduled_Job = ScheduleJob(
