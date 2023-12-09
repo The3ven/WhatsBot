@@ -67,13 +67,13 @@ const execute = async (client, msg, args, isMe) => {
     await client.sendMessage(
       msgMode,
       `🙇‍♂️ *Error*\n\n` +
-        "```Something Unexpected Happened while fetching Movie/TV Show Details.```"
+      "```Something Unexpected Happened while fetching Movie/TV Show Details.```"
     );
   } else if (data == "No Results") {
     await client.sendMessage(
       msgMode,
       `🙇‍♂️ *No Results Found!*\n\n` +
-        "```Please check the name of Movie/TV Show you have entered.```"
+      "```Please check the name of Movie/TV Show you have entered.```"
     );
   } else {
     await client.sendMessage(

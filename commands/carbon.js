@@ -43,7 +43,7 @@ const execute = async (client, msg, args, isMe) => {
     await client.sendMessage(
       msgMode,
       `🙇‍♂️ *Error*\n\n` +
-        "```Something Unexpected Happened to create the Carbon.```"
+      "```Something Unexpected Happened to create the Carbon.```"
     );
   } else {
     await client.sendMessage(

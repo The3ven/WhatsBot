@@ -1,9 +1,9 @@
 const database = require("../db");
 
-async function insertSchedule(id, task_name, task_date) {
+async function insertSchedule(number, task_name, task_date, msg, argument, isme, isSinglemsg) {
   let { conn, coll } = await database("schedule");
   try {
-    await coll.insertOne({ number: id, task: task_name, date: task_date });
+    await coll.insertOne({ number: number, task: task_name, date: task_date, msg: msg, args: argument, isMe: isme, ismsg: isSinglemsg });
     return true;
   } catch (error) {
     return false;
@@ -55,7 +55,7 @@ async function deleteSchedule(NameOfTask) {
   }
 }
 
-async function scheduleHandler() {}
+async function scheduleHandler() { }
 
 module.exports = {
   insertSchedule,

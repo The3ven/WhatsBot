@@ -202,7 +202,7 @@ const execute = async (client, msg, args, isMe) => {
   await client.sendMessage(
     msgMode,
     "*File Saved Total Contant of File : *\n" +
-      Handler(fileName, "", "READ", "")
+    Handler(fileName, "", "READ", "")
   );
 };
 

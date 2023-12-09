@@ -39,10 +39,12 @@ const execute = async (client, msg, args, isMe) => {
     try {
         target = args.pop();
         schedule_msg = args.join(" ");
-        // console.log("msg : ", schedule_msg);
-        // console.log("arguments : ", arguments);
-        // console.log("scheduleDate : ", scheduleDate);
-        // console.log("target : ", target);
+        /* -------------------------------------------- LOGS -------------------------------------------- */
+        console.log("msg : ", schedule_msg);
+        console.log("arguments : ", arguments);
+        console.log("scheduleDate : ", scheduleDate);
+        console.log("target : ", target);
+        /* ---------------------------------------------------------------------------------------------- */
         let future_date = future_date_time_finder(
             dmy_formatter(scheduleDate.toUpperCase())
         );
@@ -63,11 +65,11 @@ const execute = async (client, msg, args, isMe) => {
         );
         return;
     }
-
+    let schedule_status = false;
     if (Task === "msg") {
         try {
             let whatsapp_number = await whatsapp_number_verifayer(client, target);
-            // console.log("whatsapp_number :", whatsapp_number);
+            console.log("whatsapp_number :", whatsapp_number);
             if (whatsapp_number) {
                 try {
                     let Scheduled_Job = ScheduleJob(
@@ -77,13 +79,22 @@ const execute = async (client, msg, args, isMe) => {
                         msg,
                         schedule_msg,
                         whatsapp_number._serialized,
+                        isMe,
                         true
                     );
                     if (Scheduled_Job === Task) {
-                        await client.sendMessage(
-                            msgMode,
-                            `Your Job is Scheduled at ${schedule_date}`
-                        );
+                        try {
+                            schedule_status = await insertSchedule(target, Task, schedule_date, msg, args, isMe, true);
+                            await client.sendMessage(
+                                msgMode,
+                                `Job : Schedule a Messege\n*Messege content* : _${schedule_msg}_\n*Target* : _${whatsapp_number.user}_\n*Date* : _${schedule_date}_\n*Db Status* : _${schedule_status}_`
+                            );
+                        }
+                        catch (e) {
+                            console.log(`Error is : ${e}`);
+                            client.sendMessage(msgMode, `🙇‍♂️ *Error*\nSomthing unexpected happend while pushing the schedule job into database ... `);
+                        }
+
                     }
                 } catch { }
             } else {
@@ -98,7 +109,32 @@ const execute = async (client, msg, args, isMe) => {
                 `🙇‍♂️ *Error*\nWhile scheduling your messege`
             );
         }
-    } else if (client.commands.get(Task).command === `!${Task}`) {
+    } else if (Task === "cmd") {
+        console.log("msg : ", schedule_msg);
+        console.log("arguments : ", arguments);
+        console.log("scheduleDate : ", scheduleDate);
+        console.log("target : ", target);
+        let comamnd = arguments.shift();
+        try {
+            if (await client.commands.get(comamnd.toLowerCase()).name.toUpperCase() === comamnd.toUpperCase()) {
+                client.commands.get(comamnd.toLowerCase()).execute(client, msg, args, isMe);
+            }
+        }
+        catch (e) {
+            console.log(`Error is : ${e}`);
+            await client.sendMessage(
+                msgMode,
+                `🙇‍♂️ *Error*\nNo such command aviliable to schedule`
+            );
+        }
+
+
+
+
+
+
+
+
         // TODO : Handle Schedule Commands In future
     }
 
