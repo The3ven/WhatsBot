@@ -6,6 +6,12 @@ const execute = async (client, msg, args, isMe) => {
   }
   // console.log(args);
   let Status_msg = args.join(" ");
+  if (Status_msg.length < 1) {
+    await client.sendMessage(
+      msgMode,
+      "Can't update empty status. Please pass a message to update."
+    );
+  }
   try {
     await client
       .setStatus(Status_msg + " ~: By WhatsBot")

@@ -1,5 +1,5 @@
 //jshint esversion:8
-const dictionary = require("urban-dictionary");
+const dictionary = require("@dmzoneill/urban-dictionary");
 
 async function ud(term) {
   try {

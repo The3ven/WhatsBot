@@ -9,10 +9,10 @@ if (config.server_mode == "true") {
 const fs = require("fs");
 const logger = require("./logger");
 const { afkHandler } = require("./helpers/afkWrapper");
-
+const wwebVersion = "2.2412.54";
 const client = new Client({
   puppeteer: {
-    headless: true,
+    headless: false,
     executablePath: config.CHROME_EXEC,
     args: [
       "--no-sandbox",
@@ -26,6 +26,10 @@ const client = new Client({
     ],
   },
   authStrategy: new LocalAuth({ clientId: "whatsbot" }),
+  webVersionCache: {
+    type: "remote",
+    remotePath: `https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/${wwebVersion}.html`,
+  },
 });
 
 client.commands = new Map();

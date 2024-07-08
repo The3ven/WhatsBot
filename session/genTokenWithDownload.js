@@ -6,11 +6,15 @@ const app = require("express")();
 const config = require("./config");
 
 clean();
-
+const wwebVersion = "2.2412.54";
 const client = new Client({
   puppeteer: { headless: true, args: ["--no-sandbox"] },
   executablePath: config.CHROME_EXEC,
   authStrategy: new LocalAuth({ clientId: "whatsbot" }),
+  webVersionCache: {
+    type: "remote",
+    remotePath: `https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/${wwebVersion}.html`,
+  },
 });
 
 let password = null;
