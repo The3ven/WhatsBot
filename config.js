@@ -11,11 +11,11 @@ if (process.env.USE_CHROME === "true") {
       "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
       "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     ];
-    for (const chrome_path of ChromePaths) {
+    ChromePaths.forEach((chrome_path) =>{
       if (fs.existsSync(chrome_path)) {
         process.env.CHROME_EXECUTABLE_PATH = chrome_path;
       }
-    }
+    })
   } else if (islinux) {
     const chromeBins = ["google-chrome", "google-chrome-stable"];
     const dirs = ["/usr/bin", "/bin"];
@@ -42,5 +42,6 @@ module.exports = {
   server_mode: process.env.SERVER_MODE || "false",
   CHROME_EXEC: process.env.CHROME_EXECUTABLE_PATH || "",
   HOLIDAY_API_KEY: process.env.CALENDARIFIC_API_KEY || "",
-  HOST_ENV: process.platform || "",
+  HOST_ENV: process.env.platform || "",
+  PFP_DIR: process.env.PROFILE_PICTURE_DIR || "",
 };

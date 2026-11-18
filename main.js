@@ -9,10 +9,12 @@ if (config.server_mode == "true") {
 const fs = require("fs");
 const logger = require("./logger");
 const { afkHandler } = require("./helpers/afkWrapper");
+const { pfp_on_change_fun } = require("./helpers/pfp_on_change");
+
 
 const client = new Client({
   puppeteer: {
-    headless: true,
+    headless: false,
     executablePath: config.CHROME_EXEC,
     args: [
       "--no-sandbox",
@@ -53,6 +55,7 @@ client.on("ready", async () => {
   console.log("Bot has been started");
   try {
     await logger(client, "Bot has been started");
+    pfp_on_change_fun(client);
   } catch (err) {
     console.log(err);
   }
@@ -119,7 +122,7 @@ client.on("message_create", async (msg) => {
         );
       }
     }
-  } catch (ignore) {}
+  } catch (ignore) { }
   // console.log("msg.body : ", JSON.stringify(msg));
   if (msg.fromMe && String(msg.body).startsWith("!")) {
     let args = msg.body.slice(1).trim().split(/ +/g);

@@ -6,6 +6,15 @@ const execute = async (client, msg, args, isMe) => {
   }
   // console.log(args);
   let Status_msg = args.join(" ");
+
+  if(!Status_msg.length)
+  {
+    await client.sendMessage(
+      msgMode,
+      `🙇‍♂️ *Error*\n\n` + "```There is no data to update status```"
+    );
+    return;
+  }
   try {
     await client
       .setStatus(Status_msg + " ~: By WhatsBot")

@@ -7,6 +7,9 @@ const si = require("systeminformation");
 const os = require("os");
 const process = require("process");
 const currentPath = process.cwd();
+const axios = require("axios");
+const { MessageMedia } = require("whatsapp-web.js");
+
 
 const psup = () => {
   var ps_ut_sec = Math.floor(process.uptime());
@@ -34,13 +37,13 @@ const execute = async (client, msg, isMe) => {
     msgMode = msg.from;
   }
   msg.delete(true);
-  await checkDiskSpace(currentPath).then((diskSpace) => {
+  await checkDiskSpace(currentPath).then(async (diskSpace) => {
     // get ram usage in percentage
-    si.mem((mem) => {
+    await si.mem(async (mem) => {
       // get cpu usage in percentage
-      osInfo.cpu((cpu) => {
+      await osInfo.cpu(async (cpu) => {
         // get disk usage in percentage
-        osInfo.disk((disk) => {
+        await osInfo.disk(async (disk) => {
           // get uptime for bot process
           let { ps_hour, ps_min, ps_sec } = psup();
 
@@ -102,12 +105,45 @@ const execute = async (client, msg, isMe) => {
           Final_stats_str += `*Total Swap* : ${TotalSwep}GB  *Used Swap* : ${UsedSwep}GB    *Free* : ${TotalFreeSwap}GB\n`;
           Final_stats_str += `*CPU* : ${used_per_cpu}%  *RAM* : ${used_per_disk}%    *Disk* : ${used_per_mem}%\n`;
           // console.log(Final_stats_str);
-          client.sendMessage(msgMode, Final_stats_str);
+
+          let startdata = await get_image_media(Final_stats_str);
+          await client.sendMessage(
+            msgMode,
+            new MessageMedia(startdata.mimetype, startdata.data, startdata.filename),
+            { caption: startdata.msg }
+          );
+
+
+
+
+          // client.sendMessage(msgMode, Final_stats_str);
         });
       });
     });
   });
 };
+
+
+
+
+async function get_image_media(Final_msg) {
+  return {
+    msg:
+      Final_msg,
+    mimetype: "image/jpeg",
+    data: Buffer.from(
+      (
+        await axios.get(
+          "https://raw.githubusercontent.com/The3ven/WhatsBot/main/start.jpg",
+          {
+            responseType: "arraybuffer",
+          }
+        )
+      ).data
+    ).toString("base64"),
+    filename: "start.jpg",
+  };
+}
 
 module.exports = {
   name: "stats",

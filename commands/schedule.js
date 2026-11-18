@@ -66,7 +66,7 @@ const execute = async (client, msg, args, isMe) => {
         return;
     }
     let schedule_status = false;
-    if (Task === "msg") {
+    if (Task.toUpperCase() === "MSG") {
         try {
             let whatsapp_number = await whatsapp_number_verifayer(client, target);
             console.log("whatsapp_number :", whatsapp_number);
@@ -109,7 +109,7 @@ const execute = async (client, msg, args, isMe) => {
                 `🙇‍♂️ *Error*\nWhile scheduling your messege`
             );
         }
-    } else if (Task === "cmd") {
+    } else if (Task.toUpperCase() === "CMD") {
         console.log("msg : ", schedule_msg);
         console.log("arguments : ", arguments);
         console.log("scheduleDate : ", scheduleDate);
